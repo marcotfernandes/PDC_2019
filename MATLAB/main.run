@@ -1,23 +1,7 @@
 #!/bin/bash -l
-# The -l above is required to get the full environment with modules
-
-# Set the allocation to be charged for this job
-# not required if you have set a default allocation
 #SBATCH -A 2019-3-424
-
-# The name of the script is myjob
-
-# Only 1 hour wall-clock time will be given to this job
 #SBATCH -t 1:00:00
-
-# Number of nodes
-#SBATCH --nodes=1
-# Number of MPI processes per node
-#SBATCH --ntasks-per-node=24
-
+#SBATCH --nodes 1
 #SBATCH -e error_file.e
 #SBATCH -o output_file.o
-
-# Run the executable named myexe with MPI-rank of 48
-# and write the output into my_output_file
-matlab -nodisplay -nosplash -nodesktop -r "run('RegressionMainSc.m');exit;" | tail -n +11
+srun -n 1 matlab -nodisplay -nosplash -nodesktop -r "run('RegressionMainSc.m');exit;" | tail -n +11
