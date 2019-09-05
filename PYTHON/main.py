@@ -101,49 +101,13 @@ Y_test_pred = ANN.predictReg(Theta1F, Theta2F, X_test)
 # Calculate test error
 MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 
-# Error struct
-Error = {
-    'Test' : MSE_test,
-    'Val' : MSE_val,
-    'Train' : MSE_train,
-}
+#Save data
+string_res = "Results_{}dBm_{}spans.mat".format(RxPw, spans)
 
-SearchParam = {
-    'nSamples' : nSamples,
-    'lambda' : lambda_r,
-    'nodes' : nodes,
-    'iterations' : num_iter_train,
-}
+ANN.saveVar(string_res, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
+            nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0], X_val.shape[0], X_test.shape[0])
 
-BestParam = {
-    'nSamples': nSamplesBest,
-    'lambda': lambdaBest,
-    'nodes': nodesBest,
-    'iterations' : num_iter,
-}
 
-Param = {
-    'Search' :  SearchParam,
-    'Best' : BestParam,
-}
-
-Weights = {
-    'Theta1' : Theta1F,
-    'Theta2' : Theta2F,
-}
-
-DataSetSize = {
-    'Train' : X_train.shape[0],
-    'Validation' : X_val.shape[0],
-    'Test' : X_test.shape[0],
-}
-
-scipy.io.savemat('test.mat', {
-    'MSE': Error,
-    'Param' : Param,
-    'Weights' : Weights,
-    'DataSetSize' : DataSetSize
-})
 
 
 

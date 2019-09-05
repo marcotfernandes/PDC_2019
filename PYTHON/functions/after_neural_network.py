@@ -1,5 +1,5 @@
 import numpy as np
-
+import scipy.io
 def errCalculator(Y1,Y2) :
     m = Y1.shape[0]
 
@@ -27,3 +27,48 @@ def predictReg(Theta1, Theta2, X) :
     z3 = np.matmul(a2,np.transpose(Theta2))
     return z3
 
+def saveVar(string, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
+            nodesBest, num_iter, Theta1F, Theta2F, train_size, val_size, test_size) :
+    # Error struct
+    Error = {
+        'Test': MSE_test,
+        'Val': MSE_val,
+        'Train': MSE_train,
+    }
+
+    SearchParam = {
+        'nSamples': nSamples,
+        'lambda': lambda_r,
+        'nodes': nodes,
+        'iterations': num_iter_train,
+    }
+
+    BestParam = {
+        'nSamples': nSamplesBest,
+        'lambda': lambdaBest,
+        'nodes': nodesBest,
+        'iterations': num_iter,
+    }
+
+    Param = {
+        'Search': SearchParam,
+        'Best': BestParam,
+    }
+
+    Weights = {
+        'Theta1': Theta1F,
+        'Theta2': Theta2F,
+    }
+
+    DataSetSize = {
+        'Train': train_size,
+        'Validation': val_size,
+        'Test': test_size,
+    }
+
+    scipy.io.savemat(string, {
+        'MSE': Error,
+        'Param': Param,
+        'Weights': Weights,
+        'DataSetSize': DataSetSize
+    })
