@@ -4,6 +4,7 @@ from functions import before_neural_network as BNN
 from functions import during_neural_network as DNN
 from functions import after_neural_network as ANN
 
+
 # declare variables for load the data
 RxPw = -5
 spans = 1
@@ -25,7 +26,7 @@ IQmap = np.array(file.get('IQmap'))
 
 # define some parameters
 Mqam = IQmap.shape[0]   # modulation format
-num_iter = 8          # number of iterations
+num_iter_train = 8000   # number of iterations
 pdata = 0.25            # percentage of data that will be used
 
 
@@ -38,10 +39,10 @@ Stx = Stx[0, :]
 Srx = Srx[0, :]
 
 # Check if the gradient is being well calculated
-BNN.checkgrad(Srx, Stx,4,p_train,p_val)
+BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
 # Define the search space
-nSamples = np.arange(1, 10, 5)
+nSamples = np.arange(1, 16, 5)
 lambda_r = np.array([0, 0.1, 1])
 nodes = np.arange(5, 21, 5)
 
@@ -72,7 +73,7 @@ for i in range(0,nSamples_size) :
             lambda_aux = lambda_r[j]
             nodes_aux = nodes[k]
             MSE_train[i,j,k], MSE_val[i,j,k] = DNN.trainANN(X_train, Y_train, nSamples_aux, nodes_aux, lambda_aux,
-                         num_iter, X_val, Y_val)
+                         num_iter_train, X_val, Y_val)
 
 # Get the best values
 idx = np.unravel_index(np.argmin(MSE_val), MSE_val.shape)
@@ -85,7 +86,7 @@ X, Y = BNN.dataConverterRegression(Srx, Stx, nSamplesBest)
 # Divide data in train, validation and test
 X_train, X_val, X_test, Y_train, Y_val, Y_test = BNN.divideData(X, Y, p_train, p_val)
 # Train ANN with best values
-num_iter = 4
+num_iter = 1e4
 # Train final ANN for the first time
 Theta1, Theta2 = DNN.NN_regression(X_train, Y_train, nSamplesBest, nodesBest,
                                    lambdaBest, num_iter)
@@ -99,6 +100,50 @@ Theta1F, Theta2F = DNN.NN_regression(X2, Y2, nSamplesBest, nodesBest, lambdaBest
 Y_test_pred = ANN.predictReg(Theta1F, Theta2F, X_test)
 # Calculate test error
 MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
+
+# Error struct
+Error = {
+    'Test' : MSE_test,
+    'Val' : MSE_val,
+    'Train' : MSE_train,
+}
+
+SearchParam = {
+    'nSamples' : nSamples,
+    'lambda' : lambda_r,
+    'nodes' : nodes,
+    'iterations' : num_iter_train,
+}
+
+BestParam = {
+    'nSamples': nSamplesBest,
+    'lambda': lambdaBest,
+    'nodes': nodesBest,
+    'iterations' : num_iter,
+}
+
+Param = {
+    'Search' :  SearchParam,
+    'Best' : BestParam,
+}
+
+Weights = {
+    'Theta1' : Theta1F,
+    'Theta2' : Theta2F,
+}
+
+DataSetSize = {
+    'Train' : X_train.shape[0],
+    'Validation' : X_val.shape[0],
+    'Test' : X_test.shape[0],
+}
+
+scipy.io.savemat('test.mat', {
+    'MSE': Error,
+    'Param' : Param,
+    'Weights' : Weights,
+    'DataSetSize' : DataSetSize
+})
 
 
 
