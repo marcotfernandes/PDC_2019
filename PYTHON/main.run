@@ -1,4 +1,5 @@
 #!/bin/bash -l
+module load anaconda/2019.03/py37
 #SBATCH -A 2019-3-424
 #SBATCH -t 1:00:00
 #SBATCH --nodes 1
