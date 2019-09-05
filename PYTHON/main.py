@@ -2,6 +2,7 @@ import scipy.io
 import numpy as np
 from functions import before_neural_network as BNN
 from functions import during_neural_network as DNN
+from functions import after_neural_network as ANN
 
 # declare variables for load the data
 RxPw = -5
@@ -24,8 +25,8 @@ IQmap = np.array(file.get('IQmap'))
 
 # define some parameters
 Mqam = IQmap.shape[0]   # modulation format
-num_iter = 800          # number of iterations
-pdata = 0.15            # percentage of data that will be used
+num_iter = 8          # number of iterations
+pdata = 0.25            # percentage of data that will be used
 
 
 # definition of data percentage for train and validation
@@ -58,7 +59,7 @@ m = Stx.shape[0]
 Stx = Stx[0:round(pdata*m)]
 Srx = Srx[0:round(pdata*m)]
 
-# Begin the train
+# Search for the best ANN architecture
 for i in range(0,nSamples_size) :
     # Convert the data in ANN format
     X, Y = BNN.dataConverterRegression(Srx, Stx, nSamples[i])
@@ -74,3 +75,30 @@ for i in range(0,nSamples_size) :
                          num_iter, X_val, Y_val)
 
 # Get the best values
+idx = np.unravel_index(np.argmin(MSE_val), MSE_val.shape)
+nSamplesBest = nSamples[idx[0]]
+lambdaBest = lambda_r[idx[1]]
+nodesBest = nodes[idx[2]]
+
+# Prepare the data for final train
+X, Y = BNN.dataConverterRegression(Srx, Stx, nSamplesBest)
+# Divide data in train, validation and test
+X_train, X_val, X_test, Y_train, Y_val, Y_test = BNN.divideData(X, Y, p_train, p_val)
+# Train ANN with best values
+num_iter = 4
+# Train final ANN for the first time
+Theta1, Theta2 = DNN.NN_regression(X_train, Y_train, nSamplesBest, nodesBest,
+                                   lambdaBest, num_iter)
+# Join validation data with the train one
+X2 = np.concatenate((X_train, X_val), 0)
+Y2 = np.concatenate((Y_train, Y_val), 0)
+# Train final ANN a second time
+Theta1F, Theta2F = DNN.NN_regression(X2, Y2, nSamplesBest, nodesBest, lambdaBest, num_iter,
+                                     1, Theta1, Theta2)
+# Predict test data
+Y_test_pred = ANN.predictReg(Theta1F, Theta2F, X_test)
+# Calculate test error
+MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
+
+
+
