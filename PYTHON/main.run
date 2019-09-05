@@ -1,0 +1,7 @@
+#!/bin/bash -l
+#SBATCH -A 2019-3-424
+#SBATCH -t 1:00:00
+#SBATCH --nodes 1
+#SBATCH -e error_file.e
+#SBATCH -o output_file.o
+srun -n 1 python main.py 
