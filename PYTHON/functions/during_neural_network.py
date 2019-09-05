@@ -84,7 +84,8 @@ def NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter, no=0, t
     cost_fucntion_handler = lambda p: nnCostFunction(p, input_layer_size, hidden_layer_size,
                                                      output_layer_size, X_train, Y_train, lambda_r)[0]
     res = minimize(cost_fucntion_handler, initial_nn_params, method='nelder-mead',
-                   options={'xtol': 1e-8, 'disp': False, 'maxiter': num_iter})
+                   options={'xtol': -1, 'disp': True, 'maxiter': num_iter,
+                            'maxfev' : 5000000})
 
     Theta1 = np.reshape(res.x[0:hidden_layer_size * (input_layer_size + 1)],
                         (hidden_layer_size, (input_layer_size + 1)))
