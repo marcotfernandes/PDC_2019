@@ -1,4 +1,4 @@
-function numgrad = computeNumericalGradient_sol(J, theta)
+function numgrad = computeNumericalGradient(J, theta)
 % numgrad = computeNumericalGradient(J, theta)
 % theta: vector of parameters
 % J: function that outputs the cost (a real-number). 
