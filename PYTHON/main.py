@@ -3,7 +3,7 @@ import numpy as np
 from functions import before_neural_network as BNN
 from functions import during_neural_network as DNN
 from functions import after_neural_network as ANN
-
+from datetime import date
 
 # declare variables for load the data
 RxPw = -5
@@ -27,7 +27,7 @@ IQmap = np.array(file.get('IQmap'))
 # define some parameters
 Mqam = IQmap.shape[0]   # modulation format
 num_iter_train = 8000   # number of iterations
-pdata = 0.25            # percentage of data that will be used
+pdata = 1               # percentage of data that will be used
 
 
 # definition of data percentage for train and validation
@@ -102,7 +102,9 @@ Y_test_pred = ANN.predictReg(Theta1F, Theta2F, X_test)
 MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 
 #Save data
-string_res = "Results_{}dBm_{}spans.mat".format(RxPw, spans)
+today = date.today()
+str_date = today.strftime("%d%m%Y")
+string_res = "Results_{}dBm_{}spans_{}.mat".format(RxPw, spans, str_date)
 
 ANN.saveVar(string_res, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
             nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0], X_val.shape[0], X_test.shape[0])
