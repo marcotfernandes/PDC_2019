@@ -1,4 +1,5 @@
 import numpy as np
+from functions import before_neural_network as BNN
 from functions import after_neural_network as ANN
 from scipy.optimize import minimize
 
@@ -94,7 +95,13 @@ def NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter, no=0, t
 
     return Theta1, Theta2
 
-def trainANN(X_train, Y_train, nSamples, nodes, lambda_r, num_iter, X_val, Y_val):
+def trainANN(Stx, Srx, nSamples, nodes, lambda_r, num_iter, p_train, p_val):
+
+    # Convert the data in ANN format
+    X, Y = BNN.dataConverterRegression(Srx, Stx, nSamples)
+    # Divide the data in train and validation
+    X_train, X_val, X_trash, Y_train, Y_val, Y_trash = BNN.divideData(X, Y, p_train, p_val)
+
     Theta1, Theta2 = NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter)
 
     Y_train_pred = ANN.predictReg(Theta1, Theta2, X_train)
