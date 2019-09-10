@@ -28,7 +28,7 @@ def predictReg(Theta1, Theta2, X) :
     return z3
 
 def saveVar(string, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
-            nodesBest, num_iter, Theta1F, Theta2F, train_size, val_size, test_size) :
+            nodesBest, num_iter, Theta1F, Theta2F, train_size, val_size, test_size, time_t) :
     # Error struct
     Error = {
         'Test': MSE_test,
@@ -70,5 +70,6 @@ def saveVar(string, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num
         'MSE': Error,
         'Param': Param,
         'Weights': Weights,
-        'DataSetSize': DataSetSize
+        'DataSetSize': DataSetSize,
+        'TimeSearch' : time_t
     })

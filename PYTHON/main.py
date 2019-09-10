@@ -32,7 +32,7 @@ def run():
     # define some parameters
     Mqam = IQmap.shape[0]   # modulation format
     num_iter_train = 8000   # number of iterations
-    pdata = 0.25            # percentage of data that will be used
+    pdata = 0.15            # percentage of data that will be used
 
 
     # definition of data percentage for train and validation
@@ -47,9 +47,9 @@ def run():
     BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
     # Define the search space
-    nSamples = np.arange(1, 51, 5)
-    lambda_r = np.array([0, 0.1, 1])
-    nodes = np.arange(5, 60, 5)
+    nSamples = np.arange(1, 16, 2)
+    lambda_r = np.array([0, 0.1, 1 10])
+    nodes = np.array([5, 10, 15, 20, 35, 50])
 
     # Shortcut for variables size
     nSamples_size = len(nSamples)
@@ -72,6 +72,8 @@ def run():
 
     end = time.time()
     pool.close()
+
+    t_elapsed = end-start;
 
     MSE_train, MSE_val = par_help.result(nSamples_size, lambda_size, nodes_size, res)
 
@@ -105,12 +107,10 @@ def run():
     string_res = "Results_{}dBm_{}spans_par.mat".format(RxPw, spans)
 
     ANN.saveVar(string_res, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
-                nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0], X_val.shape[0], X_test.shape[0])
+                nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0], X_val.shape[0], X_test.shape[0],t_elapsed)
 
 
 
 if __name__ == '__main__':
     mp.freeze_support()
     run()
-
-
