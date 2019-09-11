@@ -48,7 +48,7 @@ def run():
 
     # Define the search space
     nSamples = np.arange(1, 16, 2)
-    lambda_r = np.array([0, 0.1, 1 10])
+    lambda_r = np.array([0, 0.1, 1, 10])
     nodes = np.array([5, 10, 15, 20, 35, 50])
 
     # Shortcut for variables size
