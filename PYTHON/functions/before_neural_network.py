@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from functions import during_neural_network as DNN
+import during_neural_network as DNN
 
 def dataConverterRegression(Srx, Tx, nSamples):
     m = Srx.shape[0] - 2*nSamples
@@ -29,10 +29,10 @@ def dataConverterRegression(Srx, Tx, nSamples):
 def divideData(X, Y, p_train, p_val) :
     m = X.shape[0]
 
-    train_length = math.floor(p_train * m)
-    val_length = math.floor(p_val * m)
-    test_length = math.floor((1-p_val-p_train) * m)
-
+    train_length = int(math.floor(p_train * m))
+    val_length = int(math.floor(p_val * m))
+    test_length = int(math.floor((1-p_val-p_train) * m))
+    # 
     idx_start = 0
     idx_end = train_length
     X_train = X[idx_start:idx_end,:]

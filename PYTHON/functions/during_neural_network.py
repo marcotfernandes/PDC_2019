@@ -1,6 +1,6 @@
 import numpy as np
-from functions import before_neural_network as BNN
-from functions import after_neural_network as ANN
+import before_neural_network as BNN
+import after_neural_network as ANN
 from scipy.optimize import minimize
 
 
