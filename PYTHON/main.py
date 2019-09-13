@@ -41,9 +41,6 @@ def run():
     num_iter_train = 8000  # number of iterations
     pdata = 0.15  # percentage of data that will be used
 
-
-    num_iter_train = 1
-    pdata = 0.01
     # definition of data percentage for train and validation
     p_train = 0.6  # train data percentage
     p_val = 0.2  # validation data percentage
