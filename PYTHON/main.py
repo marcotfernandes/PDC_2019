@@ -41,6 +41,9 @@ def run():
     num_iter_train = 8000  # number of iterations
     pdata = 0.15  # percentage of data that will be used
 
+
+    num_iter_train = 1
+    pdata = 0.01
     # definition of data percentage for train and validation
     p_train = 0.6  # train data percentage
     p_val = 0.2  # validation data percentage
@@ -72,9 +75,9 @@ def run():
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
-    print('Running in {} cores', nprocs)
-    if rank == 0:
 
+    if rank == 0:
+        print('Running in {} cores' .format(nprocs))
         # Unravel search space
         s = par_help.unravel(Stx, Srx, nSamples, nodes, lambda_r,
                              num_iter_train, p_train, p_val)
