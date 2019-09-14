@@ -1,8 +1,7 @@
 import numpy as np
-import before_neural_network as BNN
-import after_neural_network as ANN
+from functions import before_neural_network as BNN
+from functions import after_neural_network as ANN
 from scipy.optimize import minimize
-
 
 def randInitializeWeights(L_in, L_out):
     W = np.zeros((L_out, 1 + L_in))
@@ -19,12 +18,15 @@ def sigmoidGradient(z):
     return g
 
 
-def nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, x, y, lambda_r):
+def nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels,
+                   x, y, lambda_r):
     # Reshape nn_params back into Theta1 e Theta2
-    Theta1 = np.reshape(nn_params[0:hidden_layer_size * (input_layer_size + 1)],
-                        (hidden_layer_size, (input_layer_size + 1)))
-    Theta2 = np.reshape(nn_params[(hidden_layer_size * (input_layer_size + 1)):],
-                        (num_labels, (hidden_layer_size + 1)))
+    Theta1 = np.reshape(
+        nn_params[0:hidden_layer_size * (input_layer_size + 1)],
+        (hidden_layer_size, (input_layer_size + 1)))
+    Theta2 = np.reshape(
+        nn_params[(hidden_layer_size * (input_layer_size + 1)):],
+        (num_labels, (hidden_layer_size + 1)))
     # Number of examples
     m = x.shape[0]
     # Inicialize the output variables
@@ -57,7 +59,8 @@ def nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, x
     # Regularization
     theta1 = Theta1[:, 1:]
     theta2 = Theta2[:, 1:]
-    reg = (lambda_r / (2 * m)) * (np.sum(np.power(np.ravel(theta1), 2)) + np.sum(np.power(np.ravel(theta2), 2)))
+    reg = (lambda_r / (2 * m)) * (np.sum(np.power(np.ravel(theta1), 2)) +
+                                  np.sum(np.power(np.ravel(theta2), 2)))
     J += reg
 
     Theta1_grad[:, 1:] = Theta1_grad[:, 1:] + (lambda_r / m) * theta1
@@ -68,7 +71,15 @@ def nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, x
     return J, grad
 
 
-def NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter, no=0, th1=0, th2=0):
+def NN_regression(X_train,
+                  Y_train,
+                  nSamples,
+                  nodes,
+                  lambda_r,
+                  num_iter,
+                  no=0,
+                  th1=0,
+                  th2=0):
     output_layer_size = 2
     input_layer_size = 2 * nSamples
     hidden_layer_size = nodes
@@ -77,16 +88,26 @@ def NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter, no=0, t
         initial_Theta1 = th1
         initial_Theta2 = th2
     else:
-        initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size)
-        initial_Theta2 = randInitializeWeights(hidden_layer_size, output_layer_size)
+        initial_Theta1 = randInitializeWeights(input_layer_size,
+                                               hidden_layer_size)
+        initial_Theta2 = randInitializeWeights(hidden_layer_size,
+                                               output_layer_size)
 
-    initial_nn_params = np.concatenate((np.ravel(initial_Theta1), np.ravel(initial_Theta2)), 0)
+    initial_nn_params = np.concatenate(
+        (np.ravel(initial_Theta1), np.ravel(initial_Theta2)), 0)
 
-    cost_fucntion_handler = lambda p: nnCostFunction(p, input_layer_size, hidden_layer_size,
-                                                     output_layer_size, X_train, Y_train, lambda_r)[0]
-    res = minimize(cost_fucntion_handler, initial_nn_params, method='nelder-mead',
-                   options={'xtol': -1, 'disp': False, 'maxiter': num_iter,
-                            'maxfev' : 5000000})
+    cost_fucntion_handler = lambda p: nnCostFunction(
+        p, input_layer_size, hidden_layer_size, output_layer_size, X_train,
+        Y_train, lambda_r)[0]
+    res = minimize(cost_fucntion_handler,
+                   initial_nn_params,
+                   method='nelder-mead',
+                   options={
+                       'xtol': -1,
+                       'disp': False,
+                       'maxiter': num_iter,
+                       'maxfev': 5000000
+                   })
 
     Theta1 = np.reshape(res.x[0:hidden_layer_size * (input_layer_size + 1)],
                         (hidden_layer_size, (input_layer_size + 1)))
@@ -95,19 +116,22 @@ def NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter, no=0, t
 
     return Theta1, Theta2
 
+
 def trainANN(Stx, Srx, nSamples, nodes, lambda_r, num_iter, p_train, p_val):
 
     # Convert the data in ANN format
     X, Y = BNN.dataConverterRegression(Srx, Stx, nSamples)
     # Divide the data in train and validation
-    X_train, X_val, X_trash, Y_train, Y_val, Y_trash = BNN.divideData(X, Y, p_train, p_val)
+    X_train, X_val, X_trash, Y_train, Y_val, Y_trash = BNN.divideData(
+        X, Y, p_train, p_val)
 
-    Theta1, Theta2 = NN_regression(X_train, Y_train, nSamples, nodes, lambda_r, num_iter)
+    Theta1, Theta2 = NN_regression(X_train, Y_train, nSamples, nodes, lambda_r,
+                                   num_iter)
 
     Y_train_pred = ANN.predictReg(Theta1, Theta2, X_train)
     Y_val_pred = ANN.predictReg(Theta1, Theta2, X_val)
 
-    MSE_train, trash = ANN.errCalculator(Y_train_pred,Y_train)
-    MSE_val, trash = ANN.errCalculator(Y_val_pred,Y_val)
+    MSE_train, trash = ANN.errCalculator(Y_train_pred, Y_train)
+    MSE_val, trash = ANN.errCalculator(Y_val_pred, Y_val)
 
     return MSE_train, MSE_val

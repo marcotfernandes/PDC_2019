@@ -72,9 +72,9 @@ def run():
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
-    print('Running in {} cores', nprocs)
-    if rank == 0:
 
+    if rank == 0:
+        print('Running in {} cores' .format(nprocs))
         # Unravel search space
         s = par_help.unravel(Stx, Srx, nSamples, nodes, lambda_r,
                              num_iter_train, p_train, p_val)
