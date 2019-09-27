@@ -1,11 +1,11 @@
 #!/bin/bash -l
 
 #SBATCH -A 2019-3-424
-#SBATCH -t 10:00:00
-#SBATCH --nodes 6
+#SBATCH -t 4:00:00
+#SBATCH --nodes 48
 #SBATCH -e error_file.e
 #SBATCH -o output_file.o
 
 module load anaconda/2019.03/py37
 module load mpi4py/3.0.2/py37
-srun python main.py
+srun -n 1520 python main.py
