@@ -38,7 +38,7 @@ def run():
 
     # define some parameters
     #    Mqam = IQmap.shape[0]  # modulation format
-    num_iter_train = 8000  # number of iterations
+    num_iter_train = 8000 # 8000  # number of iterations
     pdata = 0.25  # percentage of data that will be used
 
     # definition of data percentage for train and validation
@@ -53,9 +53,10 @@ def run():
     BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
     # Define the search space
-    nSamples = np.arange(1, 100, 5)
+    nSamples = np.arange(1, 50, 5)
     lambda_r = np.array([0, 0.1, 1, 10])
-    nodes = np.arange(5, 100, 5)
+    nodes = np.arange(5, 50, 5)
+    import pdb; pdb.set_trace()
 
     # Shortcut for variables size
     nSamples_size = len(nSamples)
