@@ -56,7 +56,6 @@ def run():
     nSamples = np.arange(1, 50, 5)
     lambda_r = np.array([0, 0.1, 1, 10])
     nodes = np.arange(5, 50, 5)
-    import pdb; pdb.set_trace()
 
     # Shortcut for variables size
     nSamples_size = len(nSamples)
