@@ -27,7 +27,7 @@ IQmap = np.array(file.get('IQmap'))
 # define some parameters
 Mqam = IQmap.shape[0]   # modulation format
 num_iter_train = 8000   # number of iterations
-pdata = 1               # percentage of data that will be used
+pdata = 0.1               # percentage of data that will be used
 
 
 # definition of data percentage for train and validation
@@ -104,12 +104,7 @@ MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 #Save data
 today = date.today()
 str_date = today.strftime("%d%m%Y")
-string_res = "Results_{}dBm_{}spans_{}.mat".format(RxPw, spans, str_date)
+string_res = "Results_{}dBm_{}spans_{}_LBFGSB.mat".format(RxPw, spans, str_date)
 
 ANN.saveVar(string_res, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
             nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0], X_val.shape[0], X_test.shape[0])
-
-
-
-
-
