@@ -17,6 +17,7 @@ def train():
 
 
 def run():
+    start_prog = time.time()
     # declare variables for load the data
     RxPw = -5
     spans = 1
@@ -38,8 +39,8 @@ def run():
 
     # define some parameters
     #    Mqam = IQmap.shape[0]  # modulation format
-    num_iter_train = 8000 # 8000  # number of iterations
-    pdata = 0.25  # percentage of data that will be used
+    num_iter_train = 8000  # 8000  # number of iterations
+    pdata = 0.1  # percentage of data that will be used
 
     # definition of data percentage for train and validation
     p_train = 0.6  # train data percentage
@@ -53,9 +54,9 @@ def run():
     BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
     # Define the search space
-    nSamples = np.arange(1, 50, 5)
-    lambda_r = np.array([0, 0.1, 1, 10])
-    nodes = np.arange(5, 50, 5)
+    nSamples = np.arange(1, 20, 5)
+    lambda_r = np.array([0, 0.1, 1])
+    nodes = np.arange(5, 20, 5)
 
     # Shortcut for variables size
     nSamples_size = len(nSamples)
@@ -67,14 +68,13 @@ def run():
     Stx = Stx[0:int(round(pdata * m))]
     Srx = Srx[0:int(round(pdata * m))]
 
-    start = time.time()
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
-
+    start_par = time.time()
     if rank == 0:
-        print('Running in {} cores' .format(nprocs))
+        print('Running in {} cores'.format(nprocs))
         # Unravel search space
         s = par_help.unravel(Stx, Srx, nSamples, nodes, lambda_r,
                              num_iter_train, p_train, p_val)
@@ -101,6 +101,7 @@ def run():
 
     res = comm.gather(res, root=0)
     if rank == 0:
+        end_par = time.time()
         res = np.vstack(res)
         # import pdb; pdb.set_trace()
         # Search for the best ANN architecture
@@ -113,10 +114,7 @@ def run():
         # ]
         ###
 
-        end = time.time()
         # pool.close()
-
-        t_elapsed = end - start
 
         MSE_train, MSE_val = par_help.result(nSamples_size, lambda_size,
                                              nodes_size, res)
@@ -150,12 +148,16 @@ def run():
         MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 
         # Save data
-        string_res = "Results_{}dBm_{}spans_par.mat".format(RxPw, spans)
+        string_res = "Results_{}dBm_{}spans_par_1.mat".format(RxPw, spans)
 
+        end_prog = time.time()
+        t_elapsed_prog = end_prog - start_prog
+        t_elapsed_par = end_par - start_par
         ANN.saveVar(string_res, MSE_test, MSE_val, MSE_train, nSamples,
                     lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
                     nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0],
-                    X_val.shape[0], X_test.shape[0], t_elapsed)
+                    X_val.shape[0], X_test.shape[0], t_elapsed_prog,
+                    t_elapsed_par)
 
 
 if __name__ == '__main__':

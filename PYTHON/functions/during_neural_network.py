@@ -3,6 +3,7 @@ from functions import before_neural_network as BNN
 from functions import after_neural_network as ANN
 from scipy.optimize import minimize
 
+
 def randInitializeWeights(L_in, L_out):
     W = np.zeros((L_out, 1 + L_in))
 

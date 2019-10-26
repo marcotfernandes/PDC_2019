@@ -33,7 +33,8 @@ def predictReg(Theta1, Theta2, X):
 
 def saveVar(string, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes,
             num_iter_train, nSamplesBest, lambdaBest, nodesBest, num_iter,
-            Theta1F, Theta2F, train_size, val_size, test_size, time_t):
+            Theta1F, Theta2F, train_size, val_size, test_size, time_prog,
+            time_par):
     # Error struct
     Error = {
         'Test': MSE_test,
@@ -71,11 +72,15 @@ def saveVar(string, MSE_test, MSE_val, MSE_train, nSamples, lambda_r, nodes,
         'Test': test_size,
     }
 
+    Time = {
+        'Par': time_par,
+        'Prog': time_prog,
+    }
     scipy.io.savemat(
         string, {
             'MSE': Error,
             'Param': Param,
             'Weights': Weights,
             'DataSetSize': DataSetSize,
-            'TimeSearch': time_t
+            'Time': Time
         })
