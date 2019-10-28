@@ -72,8 +72,17 @@ def run():
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
+    start_scatter = np.zeros(nprocs)
+    end_scatter = np.zeros(nprocs)
+    start_gather = np.zeros(nprocs)
+    end_gather = np.zeros(nprocs)
+
     start_par = time.time()
     if rank == 0:
+        # Time vectors
+
+
+        start_divide = time.time()
         print('Running in {} cores'.format(nprocs))
         # Unravel search space
         s = par_help.unravel(Stx, Srx, nSamples, nodes, lambda_r,
@@ -87,19 +96,23 @@ def run():
 
         # converts data into a list of arrays
         s = [s[starts[p]:ends[p]] for p in range(nprocs)]
+        end_divide = time.time()
     else:
         s = None
 
+    start_scatter[rank] = time.time()
     s = comm.scatter(s, root=0)
 
     print('Processor {} has the list size {}'.format(rank, len(s)))
     res = np.zeros((len(s), 2))
+    end_scatter[rank] = time.time()
     for i in range(0, len(s)):
         AAA = DNN.trainANN(*s[i])
         res[i][0] = AAA[0]
         res[i][1] = AAA[1]
-
+    start_gather[rank] = time.time()
     res = comm.gather(res, root=0)
+    end_gather[rank] = time.time()
     if rank == 0:
         end_par = time.time()
         res = np.vstack(res)
@@ -153,11 +166,15 @@ def run():
         end_prog = time.time()
         t_elapsed_prog = end_prog - start_prog
         t_elapsed_par = end_par - start_par
+        t_elapsed_scatter = end_scatter - start_scatter
+        t_elapsed_gather = end_gather - start_gather
+        t_elapsed_divide = end_divide - start_divide
         ANN.saveVar(string_res, MSE_test, MSE_val, MSE_train, nSamples,
                     lambda_r, nodes, num_iter_train, nSamplesBest, lambdaBest,
                     nodesBest, num_iter, Theta1F, Theta2F, X_train.shape[0],
                     X_val.shape[0], X_test.shape[0], t_elapsed_prog,
-                    t_elapsed_par)
+                    t_elapsed_par, t_elapsed_scatter, t_elapsed_gather,
+                    t_elapsed_divide)
 
 
 if __name__ == '__main__':
