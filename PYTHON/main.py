@@ -57,7 +57,7 @@ def run():
     nSamples = np.array([5, 5, 5, 5])
     lambda_r = np.array([0.1, 0.1, 0.1])
     nodes = np.array([10, 10, 10])
-    
+
     # Shortcut for variables size
     nSamples_size = len(nSamples)
     lambda_size = len(lambda_r)
@@ -72,10 +72,10 @@ def run():
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
-    start_scatter = np.zeros(nprocs)
-    end_scatter = np.zeros(nprocs)
-    start_gather = np.zeros(nprocs)
-    end_gather = np.zeros(nprocs)
+    # start_scatter = np.zeros(nprocs)
+    # end_scatter = np.zeros(nprocs)
+    # start_gather = np.zeros(nprocs)
+    # end_gather = np.zeros(nprocs)
 
     start_par = time.time()
     if rank == 0:
@@ -83,7 +83,7 @@ def run():
 
 
         start_divide = time.time()
-        print('Running in {} cores'.format(nprocs))
+        # print('Running in {} cores'.format(nprocs))
         # Unravel search space
         s = par_help.unravel(Stx, Srx, nSamples, nodes, lambda_r,
                              num_iter_train, p_train, p_val)
@@ -100,19 +100,19 @@ def run():
     else:
         s = None
 
-    start_scatter[rank] = time.time()
+    start_scatter = time.time()
     s = comm.scatter(s, root=0)
 
-    print('Processor {} has the list size {}'.format(rank, len(s)))
+    # print('Processor {} has the list size {}'.format(rank, len(s)))
     res = np.zeros((len(s), 2))
-    end_scatter[rank] = time.time()
+    end_scatter = time.time()
     for i in range(0, len(s)):
         AAA = DNN.trainANN(*s[i])
         res[i][0] = AAA[0]
         res[i][1] = AAA[1]
-    start_gather[rank] = time.time()
+    start_gather = time.time()
     res = comm.gather(res, root=0)
-    end_gather[rank] = time.time()
+    end_gather = time.time()
     if rank == 0:
         end_par = time.time()
         res = np.vstack(res)
@@ -161,7 +161,7 @@ def run():
         MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 
         # Save data
-        string_res = "Results_{}dBm_{}spans_par_lixo.mat".format(RxPw, spans)
+        string_res = "Results_{}dBm_{}spans_par_{}.mat".format(RxPw, spans, nprocs)
 
         end_prog = time.time()
         t_elapsed_prog = end_prog - start_prog
