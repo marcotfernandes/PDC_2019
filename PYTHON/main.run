@@ -1,11 +1,19 @@
 #!/bin/bash -l
 
-#SBATCH -A 2019-3-424
-#SBATCH -t 8:00:00
-#SBATCH --nodes 12
+#SBATCH -A edu19.summer
+#SBATCH -t 2:00:00
+#SBATCH --nodes 2
 #SBATCH -e error_file.e
 #SBATCH -o output_file.o
 
 module load anaconda/2019.03/py37
 module load mpi4py/3.0.2/py37
-srun -n 360 python main.py
+srun -n 1 python main.py
+srun -n 2 python main.py
+srun -n 4 python main.py
+srun -n 6 python main.py
+srun -n 8 python main.py
+srun -n 10 python main.py
+srun -n 14 python main.py
+srun -n 18 python main.py
+srun -n 22 python main.py
