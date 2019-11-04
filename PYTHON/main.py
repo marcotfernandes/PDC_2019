@@ -54,10 +54,10 @@ def run():
     BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
     # Define the search space
-    nSamples = np.arange(1, 20, 5)
-    lambda_r = np.array([0, 0.1, 1])
-    nodes = np.arange(5, 20, 5)
-
+    nSamples = np.array([5, 5, 5, 5])
+    lambda_r = np.array([0.1, 0.1, 0.1])
+    nodes = np.array([10, 10, 10])
+    
     # Shortcut for variables size
     nSamples_size = len(nSamples)
     lambda_size = len(lambda_r)
@@ -161,7 +161,7 @@ def run():
         MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 
         # Save data
-        string_res = "Results_{}dBm_{}spans_par_1.mat".format(RxPw, spans)
+        string_res = "Results_{}dBm_{}spans_par_lixo.mat".format(RxPw, spans)
 
         end_prog = time.time()
         t_elapsed_prog = end_prog - start_prog
