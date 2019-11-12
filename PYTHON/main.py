@@ -54,7 +54,7 @@ def run():
     BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
     # Define the search space
-    nSamples = np.array([5, 5, 5, 5])
+    nSamples = np.array([50, 50, 50, 50])
     lambda_r = np.array([0.1, 0.1, 0.1])
     nodes = np.array([10, 10, 10])
 
