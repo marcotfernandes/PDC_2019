@@ -1,0 +1,6 @@
+Processor 5 took  0.11873364448547363 seg to scatter and 0.0001723766326904297 seg to gather
+Processor 4 took  0.0707852840423584 seg to scatter and 0.0001513957977294922 seg to gather
+Processor 3 took  0.055458784103393555 seg to scatter and 0.0005781650543212891 seg to gather
+Processor 2 took  0.06457352638244629 seg to scatter and 0.00015020370483398438 seg to gather
+Processor 1 took  0.011070728302001953 seg to scatter and 0.00013303756713867188 seg to gather
+Processor 0 took  0.042028188705444336 seg to scatter and 0.0001785755157470703 seg to gather

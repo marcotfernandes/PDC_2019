@@ -8,12 +8,12 @@
 
 module load anaconda/2019.03/py37
 module load mpi4py/3.0.2/py37
-srun -n 1 python main.py
-srun -n 2 python main.py
-srun -n 4 python main.py
-srun -n 6 python main.py
-srun -n 8 python main.py
-srun -n 10 python main.py
-srun -n 14 python main.py
-srun -n 18 python main.py
-srun -n 22 python main.py
+srun -n 1 python main.py > Proc1.txt
+srun -n 2 python main.py > Proc2.txt
+srun -n 4 python main.py > Proc4.txt
+srun -n 6 python main.py > Proc6.txt
+srun -n 8 python main.py > Proc8.txt
+srun -n 10 python main.py > Proc10.txt
+srun -n 14 python main.py > Proc14.txt
+srun -n 18 python main.py > Proc18.txt
+srun -n 22 python main.py > Proc22.txt

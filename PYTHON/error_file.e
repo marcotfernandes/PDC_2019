@@ -17,8 +17,11 @@ srun: error: Invalid user id 3220695: No error
 srun: Warning: Unable to assume uid=3220695
 srun: error: Invalid user id 3220695: No error
 srun: Warning: Unable to assume uid=3220695
-srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
-slurmstepd: error: *** STEP 5375433.4 ON nid01920 CANCELLED AT 2019-11-12T21:02:24 DUE TO TIME LIMIT ***
-slurmstepd: error: *** JOB 5375433 ON nid01920 CANCELLED AT 2019-11-12T21:02:24 DUE TO TIME LIMIT ***
-srun: got SIGCONT
-srun: forcing job termination
+srun: error: Invalid user id 3220695: No error
+srun: Warning: Unable to assume uid=3220695
+srun: error: Invalid user id 3220695: No error
+srun: Warning: Unable to assume uid=3220695
+srun: error: Invalid user id 3220695: No error
+srun: Warning: Unable to assume uid=3220695
+srun: error: Invalid user id 3220695: No error
+srun: Warning: Unable to assume uid=3220695
