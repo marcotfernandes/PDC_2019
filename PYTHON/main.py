@@ -54,7 +54,7 @@ def run():
     BNN.checkgrad(Srx, Stx, 4, p_train, p_val)
 
     # Define the search space
-    nSamples = np.array([50, 50, 50, 50])
+    nSamples = np.array([5, 5, 5, 5])
     lambda_r = np.array([0.1, 0.1, 0.1])
     nodes = np.array([10, 10, 10])
 
@@ -81,7 +81,6 @@ def run():
     if rank == 0:
         # Time vectors
 
-
         start_divide = time.time()
         # print('Running in {} cores'.format(nprocs))
         # Unravel search space
@@ -102,8 +101,6 @@ def run():
 
     start_scatter = time.time()
     s = comm.scatter(s, root=0)
-
-    # print('Processor {} has the list size {}'.format(rank, len(s)))
     res = np.zeros((len(s), 2))
     end_scatter = time.time()
     for i in range(0, len(s)):
@@ -113,6 +110,8 @@ def run():
     start_gather = time.time()
     res = comm.gather(res, root=0)
     end_gather = time.time()
+    print('Processor {} took  {} seg to scatter and {} seg to gather'.format(
+        rank, end_scatter-start_scatter, end_gather-start_gather))
     if rank == 0:
         end_par = time.time()
         res = np.vstack(res)
@@ -161,7 +160,8 @@ def run():
         MSE_test, trash = ANN.errCalculator(Y_test_pred, Y_test)
 
         # Save data
-        string_res = "Results_{}dBm_{}spans_par_{}.mat".format(RxPw, spans, nprocs)
+        string_res = "Results_{}dBm_{}spans_par_{}.mat".format(
+            RxPw, spans, nprocs)
 
         end_prog = time.time()
         t_elapsed_prog = end_prog - start_prog
