@@ -1,5 +1,5 @@
 %% ====================== Start parallel pool ========================== %%
-a = gcp; if(~a.Connected),parpool,end
+% a = gcp; if(~a.Connected),parpool,end
 %% Main program to call the training of a Regression Neural Network
 clear all;
 close all;
